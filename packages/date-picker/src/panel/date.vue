@@ -136,6 +136,13 @@
               :disabled-date="disabledDate"
             >
             </month-table>
+            <quarter-table
+              v-show="currentView === 'quarter'"
+              @pick="handleQuarterPick"
+              :value="new Date(value)"
+              :date="date"
+            >
+            </quarter-table>
           </div>
         </div>
       </div>
@@ -179,6 +186,7 @@ import {
   nextYear,
   prevMonth,
   nextMonth,
+  firstMonthOfQuarter,
 } from "../util";
 import Locale from "element-ui/src/mixins/locale";
 import ElInput from "element-ui/packages/input";
@@ -187,6 +195,7 @@ import TimePicker from "./time";
 import YearTable from "../basic/year-table";
 import MonthTable from "../basic/month-table";
 import DateTable from "../basic/date-table";
+import QuarterTable from "../basic/quarter-table";
 
 export default {
   mixins: [Locale],
@@ -278,7 +287,9 @@ export default {
     showMonthPicker() {
       this.currentView = "month";
     },
-
+    showQuarterPicker() {
+      this.currentView = "quarter";
+    },
     showYearPicker() {
       this.currentView = "year";
     },
@@ -351,7 +362,27 @@ export default {
         this.currentView = "date";
       }
     },
-
+    handleQuarterPick(quarter) {
+      if (this.selectionMode === "quarter") {
+        this.date = modifyDate(
+          this.date,
+          this.year,
+          firstMonthOfQuarter(quarter),
+          1
+        );
+        this.emit(this.date);
+      } else {
+        this.date = modifyDate(
+          this.date,
+          this.year,
+          firstMonthOfQuarter(quarter),
+          this.monthDate
+        );
+        // TODO: should emit intermediate value ??
+        // this.emit(this.date);
+        this.currentView = "date";
+      }
+    },
     handleDatePick(value) {
       if (this.selectionMode === "day") {
         this.date = modifyDate(
@@ -370,6 +401,9 @@ export default {
       if (this.selectionMode === "year") {
         this.date = modifyDate(this.date, year, 0, 1);
         this.emit(this.date);
+      } else if (this.selectionMode === "quarter") {
+        this.date = modifyDate(this.date, year, 0, 1);
+        this.currentView = "quarter";
       } else {
         this.date = modifyDate(this.date, year, this.month, this.monthDate);
         // TODO: should emit intermediate value ??
@@ -392,6 +426,8 @@ export default {
         this.currentView = "month";
       } else if (this.selectionMode === "year") {
         this.currentView = "year";
+      } else if (this.selectionMode === "quarter") {
+        this.currentView = "quarter";
       } else {
         this.currentView = "date";
       }
@@ -518,6 +554,7 @@ export default {
     YearTable,
     MonthTable,
     DateTable,
+    QuarterTable,
     ElInput,
     ElButton,
   },

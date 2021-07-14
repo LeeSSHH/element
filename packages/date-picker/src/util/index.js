@@ -265,3 +265,17 @@ export const nextYear = function(date, amount = 1) {
   const monthDate = Math.min(date.getDate(), getDayCountOfMonth(year, month));
   return modifyDate(date, year, month, monthDate);
 };
+
+export const quarterOfMonth = function(month) {
+  if (month < 12 && month >= 0) {
+    return Math.floor(month / 3);
+  }
+  return 0;
+};
+
+export const firstMonthOfQuarter = function(quarter) {
+  if (quarter < 4 && quarter >= 0) {
+    return quarter * 3;
+  }
+  return 0;
+};
