@@ -1,23 +1,23 @@
-import Picker from '../picker';
-import DatePanel from '../panel/date';
-import DateRangePanel from '../panel/date-range';
+import Picker from "../picker"
+import DatePanel from "../panel/date"
+import DateRangePanel from "../panel/date-range"
 
 const getPanel = function(type) {
-  if (type === 'daterange' || type === 'datetimerange') {
-    return DateRangePanel;
+  if (type === "daterange" || type === "datetimerange") {
+    return DateRangePanel
   }
-  return DatePanel;
-};
+  return DatePanel
+}
 
 export default {
   mixins: [Picker],
 
-  name: 'ElDatePicker',
+  name: "ElDatePicker",
 
   props: {
     type: {
       type: String,
-      default: 'date'
+      default: "date"
     },
     timeArrowControl: Boolean
   },
@@ -25,16 +25,16 @@ export default {
   watch: {
     type(type) {
       if (this.picker) {
-        this.unmountPicker();
-        this.panel = getPanel(type);
-        this.mountPicker();
+        this.unmountPicker()
+        this.panel = getPanel(type)
+        this.mountPicker()
       } else {
-        this.panel = getPanel(type);
+        this.panel = getPanel(type)
       }
     }
   },
 
   created() {
-    this.panel = getPanel(this.type);
+    this.panel = getPanel(this.type)
   }
-};
+}
